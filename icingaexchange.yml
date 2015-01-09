@@ -1,0 +1,23 @@
+name: notify_usbtlight
+description: "file://README.md"
+url: "https://git.netways.org/plugins/notify_usbtlight.git"
+tags: cleware, traffic light, Alarm, Alerting, Notification
+type: Notification
+vendor: Linux, NETWAYS, Unix
+target: Reporting, Hardware
+license: gplv2
+releases:
+  -
+    name: 1.0
+    description: "Initial release"
+    files:
+      -
+        name: notify_usbtlight.py
+        url: "file://notify_usbtlight.py"
+        description: "The script itself"
+        checksum: 05e977336149f2e509821262d69cce561bff9b0e
+      -
+        name: README.md
+        url: "file://README.md"
+        description: "The README File"
+        checksum: 82573287b51137e598eac64f4911e957e2c1198a
