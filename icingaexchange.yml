@@ -1,10 +1,10 @@
 name: notify_usbtlight
 description: "file:///README.md"
 url: "https://git.netways.org/plugins/"
-tags: ~
-type: Notification
-vendor: NETWAYS
-target: Reporting
+tags: Alert, Alerting, Alarm, Traffic Light
+type: Notification, Addon
+vendor: NETWAYS, Linux, Unix
+target: Reporting, Hardware
 license: gplv2
 releases:
   -
