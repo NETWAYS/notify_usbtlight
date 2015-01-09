@@ -1,5 +1,5 @@
 #####Requirements
-[Python 2.7](https://www.python.org/downloads/) and [clewarecontrol 2.5](http://www.vanheusden.com/clewarecontrol/) are required to run the script, also cron is recommended in order to automate the scripts execution.
+[Python 2.7](https://www.python.org/downloads/) and [clewarecontrol 2.5](http://www.vanheusden.com/clewarecontrol/) are required to run the script, you will also need to have a [classic ui](https://wiki.icinga.org/display/howtos/Setting+up+Icinga+Classic+UI+Standalone) running. Cron is recommended in order to automate the scripts execution.
 #####Installation  
 The script does not require any steps more steps to be taken once its requirements are are met, but in order for the traffic light to be updated the scripts needs to be called continuously.
 #####Usage
