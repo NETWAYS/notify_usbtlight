@@ -1,6 +1,6 @@
 name: notify_usbtlight
-description: "file://README.md"
-url: "https://git.netways.org/plugins/notify_usbtlight.git"
+description: "file:///README.md"
+url: "https://git.netways.org/plugins/"
 tags: ~
 type: Notification
 vendor: NETWAYS
@@ -13,11 +13,11 @@ releases:
     files:
       -
         name: notify_usbtlight.py
-        url: "file://notify_usbtlight.py"
+        url: "file:///notify_usbtlight.py"
         description: "The script itself"
         checksum: e5f946685458f7766ee8408faaa7d254
       -
         name: README.md
-        url: "file://README.md"
+        url: "file:///README.md"
         description: "The README File"
         checksum: d5aa29f13b536b094abc2a9cf1ca854c
