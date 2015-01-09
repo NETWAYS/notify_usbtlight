@@ -15,9 +15,9 @@ releases:
         name: notify_usbtlight.py
         url: "file://notify_usbtlight.py"
         description: "The script itself"
-        checksum: 05e977336149f2e509821262d69cce561bff9b0e
+        checksum: e5f946685458f7766ee8408faaa7d254
       -
         name: README.md
         url: "file://README.md"
         description: "The README File"
-        checksum: 82573287b51137e598eac64f4911e957e2c1198a
+        checksum: d5aa29f13b536b094abc2a9cf1ca854c
