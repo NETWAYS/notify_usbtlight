@@ -1,4 +1,4 @@
-#! /bin/python2
+#!/bin/env python
 #
 # COPYRIGHT:
 # 
@@ -77,7 +77,7 @@ def blinkenlights(status, debug):
     try:
         proc = subprocess.Popen(["clewarecontrol", "-l"], stdout=subprocess.PIPE)
     except OSError as err:
-        print str(err)
+        print "Call to clewarecontrol failed ", str(err) 
         return 3
 
     out, err = proc.communicate()
@@ -189,6 +189,7 @@ def main():
             usage(sys.argv[0])
             return 2
 
+    old_url = url
     if url == None \
             or (user != None and password == None) \
             or (user == None and password != None):
@@ -205,7 +206,7 @@ def main():
         url += '&hostgroup=' + hostgroup
     if servicegroup != None:
         url += '&servicegroup=' + servicegroup
- 
+    
     passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
     passman.add_password(None, url, user, password)
 
@@ -221,11 +222,14 @@ def main():
     if debug:
         print "Sending request to: "
         print url
-    req = urllib2.Request(url)
     try:
+        req = urllib2.Request(url)
         reqData = urllib2.urlopen(req, None, 10)
     except urllib2.URLError as err:
         print str(err)
+        return 3
+    except ValueError as arr:
+        print old_url, " is not a valid url (forgot your 'http'?)"
         return 3
 
     if debug:

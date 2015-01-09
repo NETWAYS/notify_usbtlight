@@ -1,7 +1,16 @@
 #####Requirements
-[Python 2.7](https://www.python.org/downloads/) and [clewarecontrol 2.5](http://www.vanheusden.com/clewarecontrol/) are required to run the script, you will also need to have a [classic ui](https://wiki.icinga.org/display/howtos/Setting+up+Icinga+Classic+UI+Standalone) running. Cron is recommended in order to automate the scripts execution.
+
+[Python 2.7](https://www.python.org/downloads/) and 
+[clewarecontrol 2.5](http://www.vanheusden.com/clewarecontrol/) are required 
+to run the script, you will also need to have a 
+[classic ui](https://wiki.icinga.org/display/howtos/Setting+up+Icinga+Classic+UI+Standalone) 
+running. Cron is recommended in order to automate the scripts execution.
+
 #####Installation  
-The script does not require any steps more steps to be taken once its requirements are are met, but in order for the traffic light to be updated the scripts needs to be called continuously.
+The script does not require any steps more steps to be taken once its 
+requirements are are met, but in order for the traffic light to be updated the 
+scripts needs to be called continuously.
+
 #####Usage
 `./frill_usbtlight.py --url url > [--user <user>] [--passwd < passwd >] [--hostgroup < hostgroup >] [--servicegroup < servicegroup >] [--debug]`
 
@@ -11,11 +20,13 @@ The script does not require any steps more steps to be taken once its requiremen
     --hostgroup     hostgroup filter
     --servicegroup  servicegroup filter
     --debug         verbose output for debugging
+
 #####Run in crontab  
 One way to do this is in a crontab:  
 To do this run: `crontab -e`  (prepend sudo if your clewarecontrol needs it)  
 And add `*/1 * * * * /path/to/script.py` to your cronfile.  
 This way the script will be run every minute
+
 #####License
 Copyright (C) 2015 NETWAYS GmbH <support@netways.de>  
 This program is free software; you can redistribute it and/or modify
