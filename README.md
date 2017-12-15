@@ -1,26 +1,32 @@
-notify_usbtlight.py is a script which controls a little 
-[USB-Ampel](http://shop.netways.de/alarmierung/nagios-ampel.html) to turn red
-when an icinga installation reports critical services, yellow when there are
-only warnings and green if everything is good and well. 
+# General
+
+`notify_usbtlight.py` is a script which controls an [USB traffic light](https://shop.netways.de/produkt-kategorie/alarmierung/icinga-ampel/).
+
+Icinga notifications will turn the traffic light red if there are critical services,
+yellow means only warnings and green tells you that your monitoring is doing well.
 
 
-#####Requirements
+# Requirements
 
-[Python 2.7](https://www.python.org/downloads/) and 
-[clewarecontrol 2.5](http://www.vanheusden.com/clewarecontrol/) are required 
-to run the script, you will also need to have a 
-[classic ui](https://wiki.icinga.org/display/howtos/Setting+up+Icinga+Classic+UI+Standalone) 
+* [Python 2.7](https://www.python.org/downloads/)
+* [clewarecontrol 2.5](http://www.vanheusden.com/clewarecontrol/)
+
+
+To run the script, you will also need to have a
+[classic ui](https://wiki.icinga.org/display/howtos/Setting+up+Icinga+Classic+UI+Standalone)
 running. Cron is recommended in order to automate the scripts execution.
 
 
-#####Installation  
+# Installation
+
 The script does not require any steps more steps to be taken once its 
 requirements are are met, but in order for the traffic light to be updated the 
 scripts needs to be called continuously.
 
 
-#####Usage
-`./notify_usbtlight.py --url url > [--user <user>] [--passwd < passwd >] [--hostgroup < hostgroup >] [--servicegroup < servicegroup >] [--debug]`
+# Usage
+
+    ./notify_usbtlight.py --url url > [--user <user>] [--passwd < passwd >] [--hostgroup < hostgroup >] [--servicegroup < servicegroup >] [--debug]
 
     --url           url to icinga
     --user          user for the webinterface
@@ -30,15 +36,17 @@ scripts needs to be called continuously.
     --debug         verbose output for debugging
 
 
-#####Run in crontab  
-One way to do this is in a crontab:  
-To do this run: `crontab -e`  (prepend sudo if your clewarecontrol needs it)  
-And add `*/1 * * * * /path/to/script.py` to your cronfile.  
+# Run in crontab
+
+One way to do this is in a crontab:
+To do this run: `crontab -e`  (prepend sudo if your clewarecontrol needs it)
+And add `*/1 * * * * /path/to/script.py` to your cronfile.
 This way the script will be run every minute
 
 
-#####License
-Copyright (C) 2015 NETWAYS GmbH <support@netways.de>  
+# License
+
+Copyright (C) 2015 NETWAYS GmbH <support@netways.de>
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
