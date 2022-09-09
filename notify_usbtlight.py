@@ -196,11 +196,9 @@ def main():
         print("Missing or unallowed operator, check your url")
         usage(sys.argv[0])
         return 3
-    #servicestatustypes=20 lists only critical and warning states
-    #serviceprobs=262186 lists only active unacknowleged check which are
-    #not in a scheduled downtime and in a hard state
-    #see http://docs.icinga.org/latest/en/cgiparams.html#cgiparams-filter
-    url += "/cgi-bin/status.cgi?host=all&jsonoutput&serviceprops=262186&servicestatustypes=20"
+    # Only critical and warning states and only active unacknowleged check which are
+    # Not in a scheduled downtime and in a hard state
+    url += "/icingaweb2/monitoring/list/hosts?host_problem=1&(host_acknowledged=0&host_in_downtime=0&host_hard_state=1)&sort=host_severity&modifyFilter=1"
 
     if hostgroup != None:
         url += '&hostgroup=' + hostgroup
