@@ -46,13 +46,13 @@
 #
 # Nagios and the Nagios logo are registered trademarks of Ethan Galstad.
 
-import getopt, sys, json, urllib2, re
+import getopt, sys, json, urllib.request, urllib.error, urllib.parse, re
 import subprocess
 
 #print usage information
 def usage(progname):
-    print "usage:"
-    print progname, """--url <url> [--user <user>] [--passwd <passwd>] [--hostgroup <hostgroup>] [--servicegroup <servicegroup>] [--debug]
+    print("usage:")
+    print(progname, """--url <url> [--user <user>] [--passwd <passwd>] [--hostgroup <hostgroup>] [--servicegroup <servicegroup>] [--debug]
 
     --url           url to icinga
     --user          user for the webinterface
@@ -66,66 +66,66 @@ DO NOT USE Version 1.0 (it's too slow!)
 """, progname, """comes with ABSOLUTELY NO WARRANTY.
 This program is licensed under the terms of the
 GNU General Public License (see source code for details)
-"""
+""")
 
 #Check and set Ampel
 def blinkenlights(status, debug):
 
     if debug:
-        print 'Checking clewarecontrol for Ampel ("Switch1") serial'
+        print('Checking clewarecontrol for Ampel ("Switch1") serial')
 
     try:
         proc = subprocess.Popen(["clewarecontrol", "-l"], stdout=subprocess.PIPE)
     except OSError as err:
-        print "Call to clewarecontrol failed ", str(err) 
+        print("Call to clewarecontrol failed ", str(err)) 
         return 3
 
     out, err = proc.communicate()
 
     if proc.returncode != 0:
-        print "Call to clewarecontrol failed with exitcode ", proc.returncode
-        print err
+        print("Call to clewarecontrol failed with exitcode ", proc.returncode)
+        print(err)
         return 3
 
     if debug:
-        print out
+        print(out)
 
     match = re.search('.*Switch1.*serial number: ([0-9]*)', out)
 
     if not match.group(0):
-        print "Could not find Ampel"
+        print("Could not find Ampel")
         return 3
 
     if debug:
-        print "Found: ", match.group(1)
-        print "Checking whether bulb ", status, " is already on"
+        print("Found: ", match.group(1))
+        print("Checking whether bulb ", status, " is already on")
 
     try:
         proc = subprocess.Popen(["clewarecontrol", "-c", "1", \
                 "-d", str(match.group(1)), "-rs", str(status)],\
                 stdout=subprocess.PIPE)
     except OSError as err:
-        print str(err)
+        print(str(err))
         return 3
     out, err = proc.communicate()
 
     if proc.returncode != 0:
-        print "Call to clewarecontrol failed with exitcode ", proc.returncode()
-        print err
+        print("Call to clewarecontrol failed with exitcode ", proc.returncode())
+        print(err)
         return 3
 
     if debug:
-        print out
+        print(out)
 
     matchBulb = re.search('On', out)
     if matchBulb != None:
         if debug:
-            print "Bulb ", status, " is already on. Not touching Ampel."
+            print("Bulb ", status, " is already on. Not touching Ampel.")
         return status
 
     if debug:
-        print "Bulb", status, " is not on, turning it on \
-            (0=red, 1=yellow, 2=green)"
+        print("Bulb", status, " is not on, turning it on \
+            (0=red, 1=yellow, 2=green)")
 
     #go over bulbs 0-2 and turning the right one on and the rest off
     for i in range(3):
@@ -133,22 +133,22 @@ def blinkenlights(status, debug):
         if i == status:
             power = 1
         if debug and power:
-            print "Turn on Bulb ", i
+            print("Turn on Bulb ", i)
         elif debug and not power:
-            print "Turn off Blub ", i
+            print("Turn off Blub ", i)
         try:
             proc = subprocess.Popen(["clewarecontrol", "-c", "1", "-d", \
                     str(match.group(1)), "-as", str(i), str(power)], \
                     stdout=subprocess.PIPE)
             proc.wait()
         except OSError as err:
-            print str(err)
+            print(str(err))
             return 3
 
         if proc.returncode != 0:
-            print "Call to clewarecontrol failed with exitcode ",\
-                    proc.returncode()
-            print err
+            print("Call to clewarecontrol failed with exitcode ",\
+                    proc.returncode())
+            print(err)
             return 3
  
     return status
@@ -160,7 +160,7 @@ def main():
                 ['url=', 'user=', 'passwd=', 'hostgroup=', 'servicegroup=', \
                 'debug'])
     except getopt.error as err:
-        print str(err)
+        print(str(err))
         usage(sys.argv[0])
         return 3
 
@@ -185,7 +185,7 @@ def main():
         elif o == "--debug":
             debug = True
         else: #getopt should already have thrown an unknow operator error
-            print "Unknown operator ", o
+            print("Unknown operator ", o)
             usage(sys.argv[0])
             return 2
 
@@ -193,49 +193,47 @@ def main():
     if url == None \
             or (user != None and password == None) \
             or (user == None and password != None):
-        print "Missing or unallowed operator, check your url"
+        print("Missing or unallowed operator, check your url")
         usage(sys.argv[0])
         return 3
-    #servicestatustypes=20 lists only critical and warning states
-    #serviceprobs=262186 lists only active unacknowleged check which are
-    #not in a scheduled downtime and in a hard state
-    #see http://docs.icinga.org/latest/en/cgiparams.html#cgiparams-filter
-    url += "/cgi-bin/status.cgi?host=all&jsonoutput&serviceprops=262186&servicestatustypes=20"
+    # Only critical and warning states and only active unacknowleged check which are
+    # Not in a scheduled downtime and in a hard state
+    url += "/icingaweb2/monitoring/list/hosts?host_problem=1&(host_acknowledged=0&host_in_downtime=0&host_hard_state=1)&sort=host_severity&modifyFilter=1"
 
     if hostgroup != None:
         url += '&hostgroup=' + hostgroup
     if servicegroup != None:
         url += '&servicegroup=' + servicegroup
     
-    passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+    passman = urllib.request.HTTPPasswordMgrWithDefaultRealm()
     passman.add_password(None, url, user, password)
 
     if debug:
-        print "Building HTTP Auth handler"
+        print("Building HTTP Auth handler")
     try:
-        urllib2.install_opener(urllib2.build_opener(\
-                    urllib2.HTTPBasicAuthHandler(passman)))
-    except (urllib2.URLError, urllib2.HTTPError) as err:
-        print str(err)
+        urllib.request.install_opener(urllib.request.build_opener(\
+                    urllib.request.HTTPBasicAuthHandler(passman)))
+    except (urllib.error.URLError, urllib.error.HTTPError) as err:
+        print(str(err))
         return 3
 
     if debug:
-        print "Sending request to: "
-        print url
+        print("Sending request to: ")
+        print(url)
     try:
-        req = urllib2.Request(url)
-        reqData = urllib2.urlopen(req, None, 10)
-    except urllib2.URLError as err:
-        print str(err)
+        req = urllib.request.Request(url)
+        reqData = urllib.request.urlopen(req, None, 10)
+    except urllib.error.URLError as err:
+        print(str(err))
         return 3
     except ValueError as arr:
-        print old_url, " is not a valid url (forgot your 'http'?)"
+        print(old_url, " is not a valid url (forgot your 'http'?)")
         return 3
 
     if debug:
-        print "Recieved HTTP code ", reqData.getcode(), " from url:"
-        print reqData.geturl()
-        print "Loading and parsing json data"
+        print("Recieved HTTP code ", reqData.getcode(), " from url:")
+        print(reqData.geturl())
+        print("Loading and parsing json data")
     data = json.loads(reqData.read())
  
     #2=green, 1=yellow, 0=red
@@ -252,11 +250,11 @@ def main():
         return 3
     
     if status == 2:
-        print 'OK - Status "green" | green=1 yellow=0 red=0'
+        print('OK - Status "green" | green=1 yellow=0 red=0')
     elif status == 1:
-        print 'WARNING - Status "yellow" | green=0 yellow=1 red=0'
+        print('WARNING - Status "yellow" | green=0 yellow=1 red=0')
     elif status == 0:
-        print 'CRITICAL - Status "red".|green=0 yellow=0 red=1'
+        print('CRITICAL - Status "red".|green=0 yellow=0 red=1')
 
 if __name__ == "__main__":
     main()
